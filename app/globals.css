@@ -3,42 +3,60 @@
 @tailwind utilities;
 
 :root {
-    --purple: #633cff;
-    --purple-hover: #beadff;
-    --light-purple: #efebff;
-    --dark-gray: #333333;
-    --gray: #737373;
-    --borders: #d9d9d9;
-    --light-gray: #fafafa;
-    --white: #ffffff;
-    --red: #ff3939;
+  --purple: #633cff;
+  --purple-hover: #beadff;
+  --light-purple: #efebff;
+  --dark-gray: #333333;
+  --gray: #737373;
+  --borders: #d9d9d9;
+  --light-gray: #fafafa;
+  --white: #ffffff;
+  --red: #ff3939;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
-    }
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
 }
 
 body {
-    color: var(--dark-gray);
-    background: var(--white);
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: clamp(12px, 2vw, 16px);
+  color: var(--dark-gray);
+  background: var(--white);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(12px, 2vw, 16px);
+  max-width: 90%;
+  margin: auto;
 }
 
 @layer utilities {
-    .text-balance {
-        text-wrap: balance;
-    }
+  .text-balance {
+    text-wrap: balance;
+  }
 }
 
-.heading-m {
-    font-size: clamp(24px, 2vw, 32px);
-    font-weight: bold;
+h2 {
+  font-size: clamp(24px, 2vw, 32px);
+  font-weight: 800 !important;
 }
-.heading-s {
-    font-size: clamp(14px, 2vw, 16px);
-    font-weight: bold;
+.h4 {
+  font-size: clamp(14px, 2vw, 16px);
+  font-weight: 800 !important;
+}
+
+.body-s {
+  font-size: 12px;
+}
+
+.border-shadow {
+  box-shadow: 0px 0px 44px -16px rgba(99, 60, 255, 0.73);
+  -webkit-box-shadow: 0px 0px 44px -16px rgba(99, 60, 255, 0.73);
+  -moz-box-shadow: 0px 0px 44px -16px rgba(99, 60, 255, 0.73);
+  border: 1px solid var(--purple);
 }
