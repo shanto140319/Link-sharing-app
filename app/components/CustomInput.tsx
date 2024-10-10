@@ -30,12 +30,14 @@ const CustomInput: React.FC<CustomInputProps> = ({
         error ? 'border-red text-red' : 'border-borders'
       } ${isFocused && !error ? 'border-shadow' : ''}  ${className ? className : ''}`}
     >
-      <Image
-        src={iconUrl || '/icons/input_link.svg'}
-        height={15}
-        width={15}
-        alt="input_link"
-      />
+      {iconUrl && (
+        <Image
+          src={iconUrl || '/icons/input_link.svg'}
+          height={15}
+          width={15}
+          alt="input_link"
+        />
+      )}
       <input
         id={id}
         type={type}
