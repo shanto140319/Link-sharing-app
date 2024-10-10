@@ -15,6 +15,8 @@ interface PlatformLink {
 }
 
 export default function Home() {
+  const token = localStorage.getItem('token');
+
   const [fields, setFields] = useState<PlatformLink[]>([]);
 
   // Handle change in platform or link
@@ -57,7 +59,9 @@ export default function Home() {
     setFields(newFields);
   }
 
-  console.log('fields', fields);
+  if (!token) {
+    return '';
+  }
   return (
     <main className="pb-10">
       <Navbar />

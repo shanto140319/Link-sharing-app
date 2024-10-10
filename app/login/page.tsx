@@ -1,14 +1,34 @@
 'use client';
 
-import React, { useState } from 'react';
-import CustomInput from '../components/CustomInput';
-import ButtonPrimary from '../components/ButtonPrimary';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import ButtonPrimary from '../components/ButtonPrimary';
+import CustomInput from '../components/CustomInput';
 
 const Page = () => {
+  const router = useRouter();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  console.log(email);
+
+  async function handleLogin() {
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      console.error('Login failed:', data.message);
+    } else {
+      // Store the token in localStorage or sessionStorage
+      localStorage.setItem('token', data.token);
+      router.push('/');
+      console.log('Login successful, token saved:', data.token);
+    }
+  }
+
   return (
     <section className="w-full flex items-center justify-center h-[100vh] bg-white">
       <article className="w-full max-w-[450px]">
@@ -39,7 +59,9 @@ const Page = () => {
           iconUrl="/icons/password.svg"
           id="password"
         />
-        <ButtonPrimary className="my-7">Login</ButtonPrimary>
+        <ButtonPrimary className="my-7" onClick={handleLogin}>
+          Login
+        </ButtonPrimary>
         <p>
           Don’t have an account?{' '}
           <Link href={'/create-account'} className="text-purple">
