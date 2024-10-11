@@ -3,29 +3,52 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { z } from 'zod';
 import ButtonPrimary from '../components/ButtonPrimary';
 import CustomInput from '../components/CustomInput';
+
+// Define login validation schema using Zod
+const loginSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(8, 'Please check again'),
+});
 
 const Page = () => {
   const router = useRouter();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [errors, setErrors] = useState<any>({});
 
   async function handleLogin() {
-    const response = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
+    setErrors({});
+    const result = loginSchema.safeParse({ email, password });
 
-    const data = await response.json();
-    if (!response.ok) {
-      console.error('Login failed:', data.message);
-    } else {
-      // Store the token in localStorage or sessionStorage
-      localStorage.setItem('token', data.token);
-      router.push('/');
-      console.log('Login successful, token saved:', data.token);
+    if (!result.success) {
+      const fieldErrors = result.error.formErrors.fieldErrors;
+      setErrors(fieldErrors);
+
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        toast.error(data.message || 'Login failed');
+      } else {
+        localStorage.setItem('token', data.token);
+        toast.success('Login successful');
+        router.push('/');
+      }
+    } catch (error) {
+      toast.error('An error occurred while logging in. Please try again.');
+      console.error('Login error:', error);
     }
   }
 
@@ -46,6 +69,7 @@ const Page = () => {
           placeholder="e.g. alex@email.com"
           iconUrl="/icons/email.svg"
           id="email"
+          error={errors.email}
         />
         <label htmlFor="password" className="body-s mt-4 mb-1 block">
           Password
@@ -58,6 +82,7 @@ const Page = () => {
           placeholder="Enter your password"
           iconUrl="/icons/password.svg"
           id="password"
+          error={errors.password}
         />
         <ButtonPrimary className="my-7" onClick={handleLogin}>
           Login

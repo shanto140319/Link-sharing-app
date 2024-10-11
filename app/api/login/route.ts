@@ -1,19 +1,16 @@
-// app/api/login/route.ts
 import { readDataFromFile } from '@/helpers/readWriteData';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { NextResponse } from 'next/server';
 
-// Secret key for signing JWT (store this securely in .env)
 const JWT_SECRET = 'link_sharing_app';
 
 export async function POST(req: Request) {
   const { email, password } = await req.json();
 
-  // Read user data from the JSON file
+  // Reading user data from the JSON file
   const users = await readDataFromFile('user.json');
 
-  // Find the user by email
   const user = users.find((user: any) => user.email === email);
 
   if (!user || !(await bcrypt.compare(password, user.password))) {
@@ -23,7 +20,7 @@ export async function POST(req: Request) {
     );
   }
 
-  // Generate a JWT token
+  // Generate JWT token
   const token = jwt.sign({ email: user.email }, JWT_SECRET, {
     expiresIn: '3h',
   });

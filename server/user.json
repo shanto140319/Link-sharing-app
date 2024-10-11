@@ -2,5 +2,21 @@
   {
     "email": "shanto@konasl.com",
     "password": "$2a$10$NBX4Qh6GaxRWJY6xDpdsIet2zTiyN2a1/4V/rjCUerLt6A49tylBi"
+  },
+  {
+    "email": "shanto@mail.com",
+    "password": "$2a$10$IqdRjTYnUg2yu1GpxK3EsuhzWBkezKHMkXhzBIp5n2qxyZSuknzl6"
+  },
+  {
+    "email": "santo.voting.100@konai.com",
+    "password": "$2a$10$io.u33X2SLIe89/1xvRIUOV4ScBCSpLGOKZLikvrMA/QsAoEjhAmK"
+  },
+  {
+    "email": "john@gmail.com",
+    "password": "$2a$10$4kF1YSXq/ZhZOJGGa6y4TOj.ekvWkUqRVcsNAElgtwqbNQuJoeqBO"
+  },
+  {
+    "email": "doe@gmail.com",
+    "password": "$2a$10$kgUAgd1vo8U1MBaTp5PPDudJUHc8XZ9F93QNAwnLciwYvoZQ1mWPu"
   }
 ]

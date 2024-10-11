@@ -8,7 +8,7 @@ interface CustomInputProps {
   placeholder?: string;
   className?: string;
   id?: string;
-  error?: boolean;
+  error?: [];
   iconUrl?: string;
   required?: boolean;
 }
@@ -27,7 +27,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
   return (
     <div
       className={`flex items-center gap-3 rounded-[8px] h-[46px] w-full px-3 border-[1px]  ${
-        error ? 'border-red text-red' : 'border-borders'
+        (error ?? length > 0) ? 'border-red text-red' : 'border-borders'
       } ${isFocused && !error ? 'border-shadow' : ''}  ${className ? className : ''}`}
     >
       {iconUrl && (
@@ -49,6 +49,8 @@ const CustomInput: React.FC<CustomInputProps> = ({
         className="placeholder-gray-500 border-0 w-full h-full focus:outline-none"
         required
       />
+
+      <p className="body-s">{error?.map((e, i) => <p key={i}>{e} </p>)}</p>
     </div>
   );
 };

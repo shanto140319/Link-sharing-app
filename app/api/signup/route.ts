@@ -6,9 +6,9 @@ export async function POST(req: Request) {
   const { email, password } = await req.json();
   console.log('email', email);
   console.log('password', password);
+
   // Read the current user data from the JSON file
   const users = await readDataFromFile('user.json');
-  console.log('users', users);
 
   // Check if user already exists
   const existingUser = users.find((user: any) => user.email === email);
@@ -22,13 +22,10 @@ export async function POST(req: Request) {
   // Hash the password
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // Create a new user object
   const newUser = { email, password: hashedPassword };
 
-  // Add the new user to the array
   users.push(newUser);
 
-  // Write the updated users array back to the JSON file
   await writeDataToFile(users, 'user.json');
 
   return NextResponse.json(

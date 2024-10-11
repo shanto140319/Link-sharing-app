@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Image from 'next/image';
 import CustomInput from '../components/CustomInput';
 import ButtonPrimary from '../components/ButtonPrimary';
+import Preview from '../components/Preview';
 
 const Page = () => {
   const [selectedImage, setSelectedImage] = useState('');
@@ -11,6 +12,7 @@ const Page = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [preViewOpen, setPreviewOpen] = useState(false);
 
   const handleImageChange = (event: any) => {
     const file = event.target.files[0];
@@ -20,13 +22,12 @@ const Page = () => {
       img.src = imageUrl;
 
       img.onload = () => {
-        console.log(img.height, img.width);
         if (img.width > 1024 || img.height > 1024) {
           setErrorMessage('Image must be below 1024x1024px.');
-          setSelectedImage(''); // Reset selected image if validation fails
+          setSelectedImage('');
         } else {
-          setSelectedImage(imageUrl); // Set image if valid
-          setErrorMessage(''); // Clear any error messages
+          setSelectedImage(imageUrl);
+          setErrorMessage('');
         }
       };
     } else {
@@ -35,7 +36,7 @@ const Page = () => {
   };
   return (
     <>
-      <Navbar />
+      <Navbar setPreviewOpen={setPreviewOpen} />
       <section className="grid lg:grid-cols-[40%_55%] gap-10">
         <div>a</div>
         <div className="mt-10">
@@ -47,7 +48,7 @@ const Page = () => {
 
             <div className="flex items-center justify-center gap-6">
               {selectedImage ? (
-                <div className="mb-4 h-[190px] w-[190px]">
+                <div className="mb-4 h-[190px] w-[190px] relative">
                   <Image
                     src={selectedImage}
                     alt="Uploaded Image"
@@ -55,6 +56,26 @@ const Page = () => {
                     width={190}
                     height={190}
                   />
+                  <label
+                    htmlFor="profile"
+                    className="flex flex-col absolute top-0 left-0 h-full w-full bg-black bg-opacity-50 items-center justify-center z-10 text-white cursor-pointer"
+                  >
+                    <Image
+                      src="/icons/camera-white.svg"
+                      alt="Upload Icon"
+                      className="mb-4"
+                      width={30}
+                      height={30}
+                    />
+                    <input
+                      id="profile"
+                      type="file"
+                      accept="image/png, image/jpeg"
+                      className="hidden"
+                      onChange={handleImageChange}
+                    />
+                    Change image
+                  </label>
                 </div>
               ) : (
                 <>
@@ -67,6 +88,7 @@ const Page = () => {
                       height={30}
                     />
                     <input
+                      id="profile"
                       type="file"
                       accept="image/png, image/jpeg"
                       className="hidden"
@@ -132,6 +154,14 @@ const Page = () => {
           </div>
         </div>
       </section>
+
+      <Preview
+        isOpen={preViewOpen}
+        name={firstName}
+        email={email}
+        profilePicture={selectedImage}
+        onClose={() => setPreviewOpen(false)}
+      />
     </>
   );
 };
