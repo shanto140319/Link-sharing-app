@@ -1,8 +1,6 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 
-// Define the path to the JSON file
-
 // Function to read the data from the JSON file
 export async function readDataFromFile(fileName: string) {
   const dataFilePath = path.join(process.cwd(), `server/${fileName}`);

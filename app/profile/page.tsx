@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Image from 'next/image';
 import CustomInput from '../components/CustomInput';
@@ -14,6 +14,11 @@ const profileSchema = z.object({
   lastName: z.string().min(1, 'Can not be empty'),
   email: z.string().email('Invalid email address'),
 });
+interface PlatformLink {
+  platform: string;
+  link: string;
+  error: string[];
+}
 
 const Page = () => {
   const [selectedImage, setSelectedImage] = useState('');
@@ -22,6 +27,26 @@ const Page = () => {
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState<any>({});
   const [preViewOpen, setPreviewOpen] = useState(false);
+
+  const [links, setLinks] = useState<PlatformLink[]>([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    fetch('/api/get-links', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setLinks(data.links);
+      })
+      .catch((error) => {
+        console.error('Error fetching links:', error);
+      });
+  }, []);
 
   const handleImageChange = (event: any) => {
     const file = event.target.files[0];
@@ -60,7 +85,26 @@ const Page = () => {
     <>
       <Navbar setPreviewOpen={setPreviewOpen} />
       <section className="grid lg:grid-cols-[40%_55%] gap-10">
-        <div>a</div>
+        <div className="hidden lg:flex flex-col justify-center items-center w-full ml-[-10%]">
+          <Image
+            src={'/images/phone.png'}
+            alt="phone"
+            height={400}
+            width={200}
+          />
+          <div className="grid gap-5 absolute">
+            {links?.map((link, index) => {
+              return (
+                <div
+                  className={`${link?.platform ? 'px-5 py-2 border ' : ''} border-borders rounded-lg`}
+                  key={index}
+                >
+                  {link?.platform}
+                </div>
+              );
+            })}
+          </div>
+        </div>
         <div className="mt-10">
           <h2>Profile Details</h2>
           <p>Add your details to create a personal touch to your profile.</p>

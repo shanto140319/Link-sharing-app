@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { NextResponse } from 'next/server';
 
-const JWT_SECRET = 'link_sharing_app';
+const JWT_SECRET = process.env.JWT_SECRET || 'link_sharing_app';
 
 export async function POST(req: Request) {
   const { email, password } = await req.json();
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 
   // Generate JWT token
   const token = jwt.sign({ email: user.email }, JWT_SECRET, {
-    expiresIn: '3h',
+    expiresIn: '10d',
   });
 
   // Return the token to the client

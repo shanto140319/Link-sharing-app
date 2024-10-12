@@ -8,7 +8,6 @@ interface PropsType {
   handleRemove: any;
   handleChange: any;
   field: {
-    id: number;
     platform: string;
     link: string;
     error: string[];
@@ -29,7 +28,7 @@ const AddLinkComponent: React.FC<PropsType> = ({
             <span className="h-[1px] w-3 bg-gray"></span>
             <span className="h-[1px] w-3 bg-gray"></span>
           </div>
-          <h4 className="font-extrabold"> Link#{field.id + 1}</h4>
+          <h4 className="font-extrabold"> Link#{index + 1}</h4>
         </div>
         <span onClick={() => handleRemove(index)} className="cursor-pointer">
           Remove

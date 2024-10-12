@@ -4,8 +4,6 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   const { email, password } = await req.json();
-  console.log('email', email);
-  console.log('password', password);
 
   // Read the current user data from the JSON file
   const users = await readDataFromFile('user.json');

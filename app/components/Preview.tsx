@@ -1,14 +1,8 @@
+'use client';
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ButtonSecondary from './ButtonSecondary';
 import ButtonPrimary from './ButtonPrimary';
-
-type Link = {
-  name: string;
-  url: string;
-  icon: string;
-  bgColor: string;
-};
 
 type PreviewModalProps = {
   isOpen: boolean;
@@ -16,21 +10,44 @@ type PreviewModalProps = {
   name: string;
   email: string;
   profilePicture: string;
-  links?: Link[];
 };
 
+interface PlatformLink {
+  platform: string;
+  link: string;
+  error: string[];
+}
 const Preview: React.FC<PreviewModalProps> = ({
   isOpen,
   onClose,
   name,
   email,
   profilePicture,
-  links,
 }) => {
+  const [links, setLinks] = useState<PlatformLink[]>([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    fetch('/api/get-links', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setLinks(data.links);
+      })
+      .catch((error) => {
+        console.error('Error fetching links:', error);
+      });
+  }, []);
+
   if (!isOpen) return null;
 
   return (
-    <div className="absolute top-0 left-0 h-[100vh] w-full z-50 bg-white">
+    <div className="fixed top-0 left-0 bottom-0 right-0 h-[100%] w-full z-50 bg-white">
       <section className="bg-purple h-[350px] p-5 rounded-bl-[20px] rounded-br-[20px]">
         <div className="w-full py-3 px-5 flex items-center justify-between bg-white rounded-[12px]">
           <ButtonSecondary className="max-w-[160px]" onClick={onClose}>
@@ -56,11 +73,11 @@ const Preview: React.FC<PreviewModalProps> = ({
             {links?.map((link, idx) => (
               <a
                 key={idx}
-                href={link.url}
-                className={`flex items-center justify-between py-2 px-4 rounded-lg text-white mb-2 ${link.bgColor}`}
+                href={link.link}
+                target="_blank"
+                className={`flex items-center justify-center py-2 px-4 rounded-lg mb-2 border border-borders`}
               >
-                <span>{link.name}</span>
-                <span className="material-icons">{link.icon}</span>
+                <span>{link.platform}</span>
               </a>
             ))}
           </div>

@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DragDropContext, Draggable } from 'react-beautiful-dnd';
 import AddLinkComponent from './components/AddLinkComponent';
 import ButtonPrimary from './components/ButtonPrimary';
@@ -9,20 +9,36 @@ import Navbar from './components/Navbar';
 import StrictModeDroppable from './components/StrictModeDroppable';
 import { platformLinkPatterns } from '@/helpers/PlatformData';
 import Image from 'next/image';
+import toast from 'react-hot-toast';
 
 interface PlatformLink {
-  id: number;
   platform: string;
   link: string;
   error: string[];
 }
 
-export default function Home() {
+const Home = () => {
   const token = localStorage.getItem('token');
 
   const [fields, setFields] = useState<PlatformLink[]>([]);
 
-  // Handle change in platform or link
+  useEffect(() => {
+    fetch('/api/get-links', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setFields(data.links);
+      })
+      .catch((error) => {
+        console.error('Error fetching links:', error);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleChange = (
     index: number,
     fieldName: keyof PlatformLink,
@@ -44,10 +60,7 @@ export default function Home() {
 
   // Add new platform-link pair
   const handleAdd = () => {
-    setFields([
-      ...fields,
-      { id: fields.length, platform: '', link: '', error: [] },
-    ]);
+    setFields([...fields, { platform: '', link: '', error: [] }]);
   };
 
   // Remove platform-link pair
@@ -65,8 +78,7 @@ export default function Home() {
     setFields(newFields);
   }
 
-  const handleSubmit = () => {
-    console.log(fields);
+  const handleSubmit = async () => {
     const newFields = fields?.map((field) => {
       const errors: string[] = [];
       if (!field.platform) {
@@ -77,9 +89,6 @@ export default function Home() {
         platformLinkPatterns[field.platform] &&
         !platformLinkPatterns[field.platform].test(field.link)
       ) {
-        console.log(platformLinkPatterns[field.platform]);
-        console.log(field.link);
-        console.log(platformLinkPatterns[field.platform].test(field.link));
         errors.push('Please check the url');
       }
 
@@ -95,8 +104,29 @@ export default function Home() {
     const isValid = newFields.every((field) => field.error.length === 0);
 
     if (isValid) {
-      console.log('Fields are valid! Submitting data...', newFields);
-      // Perform submission or further actions
+      const token = localStorage.getItem('token');
+
+      try {
+        const response = await fetch('/api/upload-links', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            links: newFields,
+          }),
+        });
+
+        if (response.ok) {
+          toast.success('Data submitted successfully!');
+        } else {
+          toast.error('Failed to submit data');
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error('error');
+      }
     } else {
       console.log('Validation failed, please correct the errors.');
     }
@@ -117,13 +147,13 @@ export default function Home() {
             width={200}
           />
           <div className="grid gap-5 absolute">
-            {fields.map((field, index) => {
+            {fields?.map((field, index) => {
               return (
                 <div
                   className={`${field.platform ? 'px-5 py-2 border ' : ''} border-borders rounded-lg`}
                   key={index}
                 >
-                  {field.platform}
+                  {field?.platform}
                 </div>
               );
             })}
@@ -190,4 +220,6 @@ export default function Home() {
       </div>
     </main>
   );
-}
+};
+
+export default Home;

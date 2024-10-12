@@ -18,5 +18,9 @@
   {
     "email": "doe@gmail.com",
     "password": "$2a$10$kgUAgd1vo8U1MBaTp5PPDudJUHc8XZ9F93QNAwnLciwYvoZQ1mWPu"
+  },
+  {
+    "email": "shanto1@mail.com",
+    "password": "$2a$10$3LdaOFrGQ6d8YbfLFj/6vOLv9A.RYxMl8/32UrZGrPu79dlMhSF2."
   }
 ]
