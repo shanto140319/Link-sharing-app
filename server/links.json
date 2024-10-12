@@ -1,10 +1,15 @@
 [
   {
-    "email": "santo.voting.100@konai.com",
+    "email": "rafi@mail.com",
     "links": [
       {
-        "platform": "GitLab",
-        "link": "https://www.gitlab.com/@JamunaTVbd",
+        "platform": "Facebook",
+        "link": "https://www.facebook.com/rafi",
+        "error": []
+      },
+      {
+        "platform": "YouTube",
+        "link": "https://www.youtube.com/rafi",
         "error": []
       }
     ]

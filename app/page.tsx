@@ -18,7 +18,12 @@ interface PlatformLink {
 }
 
 const Home = () => {
-  const token = localStorage.getItem('token');
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    setToken(storedToken);
+  }, []);
 
   const [fields, setFields] = useState<PlatformLink[]>([]);
 
@@ -31,13 +36,15 @@ const Home = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        setFields(data.links);
+        if (data?.links) {
+          setFields(data?.links);
+        }
       })
       .catch((error) => {
         console.error('Error fetching links:', error);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [token]);
 
   const handleChange = (
     index: number,
@@ -57,7 +64,6 @@ const Home = () => {
 
     setFields(newFields);
   };
-
   // Add new platform-link pair
   const handleAdd = () => {
     setFields([...fields, { platform: '', link: '', error: [] }]);
@@ -169,7 +175,7 @@ const Home = () => {
             + Add new link
           </ButtonSecondary>
 
-          {fields.length <= 0 ? (
+          {fields?.length <= 0 ? (
             <EmptyLinks />
           ) : (
             <DragDropContext onDragEnd={handleOnDragEnd}>
@@ -212,7 +218,7 @@ const Home = () => {
       <div className="mt-10 flex justify-end">
         <ButtonPrimary
           className="max-w-[90px]"
-          disabled={fields.length <= 0}
+          disabled={fields?.length <= 0}
           onClick={handleSubmit}
         >
           Save

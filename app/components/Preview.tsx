@@ -48,21 +48,21 @@ const Preview: React.FC<PreviewModalProps> = ({
 
   return (
     <div className="fixed top-0 left-0 bottom-0 right-0 h-[100%] w-full z-50 bg-white">
-      <section className="bg-purple h-[350px] p-5 rounded-bl-[20px] rounded-br-[20px]">
-        <div className="w-full py-3 px-5 flex items-center justify-between bg-white rounded-[12px]">
-          <ButtonSecondary className="max-w-[160px]" onClick={onClose}>
+      <section className="md:bg-purple  md:h-[350px] p-5 rounded-bl-[20px] rounded-br-[20px]">
+        <div className="w-full md:py-3 md:px-5 flex items-center justify-between bg-white rounded-[12px]">
+          <ButtonSecondary className="max-w-[150px]" onClick={onClose}>
             Back to editor
           </ButtonSecondary>
-          <ButtonPrimary className="max-w-[160px]">Share link</ButtonPrimary>
+          <ButtonPrimary className="max-w-[150px]">Share link</ButtonPrimary>
         </div>
       </section>
 
-      <div className="bg-white rounded-[20px] shadow-lg p-8 w-full max-w-[350px] m-auto mt-[-100px] min-h-[400px]">
+      <div className="bg-white rounded-[20px] md:shadow-lg p-8 w-full max-w-[350px] m-auto md:mt-[-100px] min-h-[400px]">
         <div className="flex flex-col items-center">
           <Image
             src={profilePicture}
             alt={`${name}'s profile`}
-            className="rounded-full w-24 h-24 mb-4"
+            className="rounded-full w-24 h-24 mb-4 border-[5px] border-purple"
             height={100}
             width={100}
           />
@@ -75,7 +75,7 @@ const Preview: React.FC<PreviewModalProps> = ({
                 key={idx}
                 href={link.link}
                 target="_blank"
-                className={`flex items-center justify-center py-2 px-4 rounded-lg mb-2 border border-borders`}
+                className={`flex items-center justify-center py-3 px-4 rounded-lg mb-2 border border-borders`}
               >
                 <span>{link.platform}</span>
               </a>

@@ -84,7 +84,7 @@ const Page = () => {
   return (
     <>
       <Navbar setPreviewOpen={setPreviewOpen} />
-      <section className="grid lg:grid-cols-[40%_55%] gap-10">
+      <section className="grid lg:grid-cols-[40%_55%] gap-10 px-5">
         <div className="hidden lg:flex flex-col justify-center items-center w-full ml-[-10%]">
           <Image
             src={'/images/phone.png'}
@@ -109,10 +109,10 @@ const Page = () => {
           <h2>Profile Details</h2>
           <p>Add your details to create a personal touch to your profile.</p>
 
-          <div className="flex justify-between items-center mt-10">
+          <div className="flex flex-col md:flex-row justify-between md:items-center mt-10 gap-5">
             <p>Profile picture</p>
 
-            <div className="flex items-center justify-center gap-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-center gap-6">
               {selectedImage ? (
                 <div className="mb-4 h-[190px] w-[190px] relative">
                   <Image
@@ -172,7 +172,7 @@ const Page = () => {
             </div>
           </div>
           <article className="mt-12 grid gap-3">
-            <div className="grid grid-cols-[2fr_3fr] gap-10">
+            <div className="grid md:grid-cols-[2fr_3fr] md:gap-10">
               <label htmlFor="firstName" className="block mb-1 md:mb-0">
                 First name*
               </label>
@@ -186,7 +186,7 @@ const Page = () => {
                 error={errors.firstName}
               />
             </div>
-            <div className="grid grid-cols-[2fr_3fr] gap-10">
+            <div className="grid md:grid-cols-[2fr_3fr] md:gap-10">
               <label htmlFor="lastName" className="block mb-1 md:mb-0">
                 Last name*
               </label>
@@ -203,7 +203,7 @@ const Page = () => {
                 <p className="text-red-500">{errors.lastName}</p>
               )}
             </div>
-            <div className="grid grid-cols-[2fr_3fr] gap-10">
+            <div className="grid md:grid-cols-[2fr_3fr] md:gap-10">
               <label htmlFor="email" className="block mb-1 md:mb-0">
                 Email
               </label>
