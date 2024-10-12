@@ -5,13 +5,22 @@ import Image from 'next/image';
 import CustomInput from '../components/CustomInput';
 import ButtonPrimary from '../components/ButtonPrimary';
 import Preview from '../components/Preview';
+import toast from 'react-hot-toast';
+import { z } from 'zod';
+
+// Zod schema
+const profileSchema = z.object({
+  firstName: z.string().min(1, 'Can not be empty'),
+  lastName: z.string().min(1, 'Can not be empty'),
+  email: z.string().email('Invalid email address'),
+});
 
 const Page = () => {
   const [selectedImage, setSelectedImage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [errors, setErrors] = useState<any>({});
   const [preViewOpen, setPreviewOpen] = useState(false);
 
   const handleImageChange = (event: any) => {
@@ -23,17 +32,30 @@ const Page = () => {
 
       img.onload = () => {
         if (img.width > 1024 || img.height > 1024) {
-          setErrorMessage('Image must be below 1024x1024px.');
+          toast.error('Image must be below 1024x1024px.');
           setSelectedImage('');
         } else {
           setSelectedImage(imageUrl);
-          setErrorMessage('');
         }
       };
     } else {
-      setErrorMessage('Please select a valid PNG or JPEG image');
+      toast.error('Please select a valid PNG or JPEG image');
     }
   };
+
+  const handleSubmit = () => {
+    setErrors({});
+    const result = profileSchema.safeParse({ firstName, lastName, email });
+
+    if (!result.success) {
+      const fieldErrors = result.error.formErrors.fieldErrors;
+      setErrors(fieldErrors);
+      return;
+    }
+
+    toast.success('Profile saved successfully');
+  };
+
   return (
     <>
       <Navbar setPreviewOpen={setPreviewOpen} />
@@ -52,13 +74,13 @@ const Page = () => {
                   <Image
                     src={selectedImage}
                     alt="Uploaded Image"
-                    className="mb-4 h-full w-full object-cover rounded-lg"
+                    className="mb-4 h-full max-w-full object-contain rounded-[12px]"
                     width={190}
                     height={190}
                   />
                   <label
                     htmlFor="profile"
-                    className="flex flex-col absolute top-0 left-0 h-full w-full bg-black bg-opacity-50 items-center justify-center z-10 text-white cursor-pointer"
+                    className="flex flex-col absolute top-0 left-0 h-full w-full bg-black bg-opacity-50 items-center justify-center z-10 text-white cursor-pointer rounded-[12px]"
                   >
                     <Image
                       src="/icons/camera-white.svg"
@@ -79,7 +101,7 @@ const Page = () => {
                 </div>
               ) : (
                 <>
-                  <label className="cursor-pointer text-purple-600 font-medium flex flex-col items-center justify-center bg-lightPurple p-6 rounded-lg h-[190px] w-[190px]">
+                  <label className="cursor-pointer text-purple-600 font-medium flex flex-col items-center justify-center bg-lightPurple p-6 rounded-[12px] h-[190px] w-[190px]">
                     <Image
                       src="/icons/camera.svg"
                       alt="Upload Icon"
@@ -117,6 +139,7 @@ const Page = () => {
                 required
                 placeholder="e.g. John"
                 id="firstName"
+                error={errors.firstName}
               />
             </div>
             <div className="grid grid-cols-[2fr_3fr] gap-10">
@@ -130,7 +153,11 @@ const Page = () => {
                 required
                 placeholder="e.g. Doe"
                 id="lastName"
+                error={errors.lastName}
               />
+              {errors.lastName && (
+                <p className="text-red-500">{errors.lastName}</p>
+              )}
             </div>
             <div className="grid grid-cols-[2fr_3fr] gap-10">
               <label htmlFor="email" className="block mb-1 md:mb-0">
@@ -140,9 +167,9 @@ const Page = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 type="email"
-                required
                 placeholder="e.g. john@email.com"
                 id="email"
+                error={errors.email}
               />
             </div>
           </article>
@@ -150,14 +177,19 @@ const Page = () => {
           <div className="my-10 pb-10">
             <hr className="text-borders mb-4 block" />
 
-            <ButtonPrimary className="w-[90px] float-right">Save</ButtonPrimary>
+            <ButtonPrimary
+              className="max-w-[90px] float-right"
+              onClick={handleSubmit}
+            >
+              Save
+            </ButtonPrimary>
           </div>
         </div>
       </section>
 
       <Preview
         isOpen={preViewOpen}
-        name={firstName}
+        name={firstName + ' ' + lastName}
         email={email}
         profilePicture={selectedImage}
         onClose={() => setPreviewOpen(false)}

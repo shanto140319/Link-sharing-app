@@ -11,6 +11,7 @@ interface PropsType {
     id: number;
     platform: string;
     link: string;
+    error: string[];
   };
 }
 
@@ -53,6 +54,7 @@ const AddLinkComponent: React.FC<PropsType> = ({
         placeholder="Enter your link"
         iconUrl="/icons/input_link.svg"
         id="email"
+        error={field.error}
       />
     </article>
   );
